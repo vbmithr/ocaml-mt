@@ -30,3 +30,23 @@ module Trade :
         method v : 'p
       end
   end
+module Ticker :
+  sig
+    class ['ts, 'p] ticker :
+      last:'p ->
+      bid:'p ->
+      ask:'p ->
+      high:'p ->
+      low:'p ->
+      volume:'p ->
+      ts:'ts ->
+      object
+        method ask : 'p
+        method bid : 'p
+        method high : 'p
+        method last : 'p
+        method low : 'p
+        method timestamp : 'ts
+        method volume : 'p
+      end
+  end

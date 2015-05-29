@@ -34,3 +34,16 @@ module Trade = struct
       inherit ['p] tick ~p ~v
     end
 end
+
+module Ticker = struct
+  class ['ts, 'p] ticker ~last ~bid ~ask ~high ~low ~volume ~ts =
+    object
+      method last : 'p = last
+      method bid : 'p = bid
+      method ask : 'p = ask
+      method high : 'p = high
+      method low : 'p = low
+      method volume : 'p = volume
+      method timestamp : 'ts = ts
+    end
+end
