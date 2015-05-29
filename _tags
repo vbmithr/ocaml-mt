@@ -1,1 +1,2 @@
 true: debug, safe_string, bin_annot
+<lib/*.*>: package(ppx_deriving.std)

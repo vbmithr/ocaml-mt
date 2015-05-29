@@ -38,3 +38,23 @@ class ['ts, 'p] ticker :
     method timestamp : 'ts
     method volume : 'p
   end
+class ['ts, 'p] ticker_with_vwap :
+  vwap:'p ->
+  last:'p ->
+  bid:'p ->
+  ask:'p ->
+  high:'p ->
+  low:'p ->
+  volume:'p ->
+  ts:'ts ->
+  object
+    method ask : 'p
+    method bid : 'p
+    method high : 'p
+    method last : 'p
+    method low : 'p
+    method timestamp : 'ts
+    method volume : 'p
+    method vwap : 'p
+  end
+type 'a orderbook = { bids : 'a list; asks : 'a list; } [@@deriving show,create]

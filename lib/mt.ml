@@ -43,3 +43,14 @@ class ['ts, 'p] ticker ~last ~bid ~ask ~high ~low ~volume ~ts =
     method volume : 'p = volume
     method timestamp : 'ts = ts
   end
+
+class ['ts, 'p] ticker_with_vwap ~vwap ~last ~bid ~ask ~high ~low ~volume ~ts =
+  object
+    inherit ['ts, 'p] ticker ~last ~bid ~ask ~high ~low ~volume ~ts
+    method vwap : 'p = vwap
+  end
+
+type 'a orderbook = {
+  bids: 'a list;
+  asks: 'a list;
+} [@@deriving show,create]
