@@ -3,6 +3,12 @@ class ['ts] timestamp ts =
     method ts : 'ts = ts
   end
 
+class ['ts] timestamp_ns ts ns =
+  object
+    inherit ['ts] timestamp ts
+    method ns : 'ts = ns
+  end
+
 class direction d =
   object
     method d : [`Unset | `Bid | `Ask] = d
@@ -17,20 +23,27 @@ class ['p] tick ~p ~v =
 class ['p] tick_with_direction ~p ~v ~d =
   object
     inherit direction d
-    inherit ['p] tick ~p ~v
+    inherit ['p] tick p v
   end
 
 class ['p, 'ts] tick_with_timestamp ~p ~v ~ts =
   object
     inherit ['ts] timestamp ts
-    inherit ['p] tick ~p ~v
+    inherit ['p] tick p v
   end
 
 class ['p, 'ts] tick_with_direction_ts ~p ~v ~d ~ts =
   object
     inherit direction d
     inherit ['ts] timestamp ts
-    inherit ['p] tick ~p ~v
+    inherit ['p] tick p v
+  end
+
+class ['p, 'ts] tick_with_d_ts_ns ~p ~v ~d ~ts ~ns =
+  object
+    inherit direction d
+    inherit ['ts] timestamp_ns ts ns
+    inherit ['p] tick p v
   end
 
 class ['ts, 'p] ticker ~last ~bid ~ask ~high ~low ~volume ~ts =
