@@ -2,3 +2,4 @@ PRJ mt
 S lib
 B _build/lib
 PKG ppx_deriving.std
+PKG ocplib-endian

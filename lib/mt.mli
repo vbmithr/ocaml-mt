@@ -1,41 +1,52 @@
 class ['ts] timestamp : 'ts -> object method ts : 'ts end
 class ['ts] timestamp_ns :
   'ts -> 'ts -> object method ns : 'ts method ts : 'ts end
-class direction :
-  [ `Ask | `Bid | `Unset ] -> object method d : [ `Ask | `Bid | `Unset ] end
+type d = [ `Ask | `Bid | `Unset ]
+val pp_d : Format.formatter -> [< `Ask | `Bid | `Unset ] -> unit
+val show_d : [< `Ask | `Bid | `Unset ] -> string
+val min_d : int
+val max_d : int
+val d_to_enum : [< `Ask | `Bid | `Unset ] -> int
+val d_of_enum : int -> [> `Ask | `Bid | `Unset ] option
+val d_of_enum_exn : int -> [> `Ask | `Bid | `Unset ]
+class direction : d -> object method d : d end
 class ['p] tick : p:'p -> v:'p -> object method p : 'p method v : 'p end
 class ['p] tick_with_direction :
-  p:'p ->
-  v:'p ->
-  d:[ `Ask | `Bid | `Unset ] ->
-  object method d : [ `Ask | `Bid | `Unset ] method p : 'p method v : 'p end
+  p:'p -> v:'p -> d:d -> object method d : d method p : 'p method v : 'p end
 class ['p, 'ts] tick_with_timestamp :
-  p:'p ->
-  v:'p -> ts:'ts -> object method p : 'p method ts : 'ts method v : 'p end
-class ['p, 'ts] tick_with_direction_ts :
-  p:'p ->
-  v:'p ->
-  d:[ `Ask | `Bid | `Unset ] ->
   ts:'ts ->
-  object
-    method d : [ `Ask | `Bid | `Unset ]
-    method p : 'p
-    method ts : 'ts
-    method v : 'p
-  end
-class ['p, 'ts] tick_with_d_ts_ns :
+  p:'p -> v:'p -> object method p : 'p method ts : 'ts method v : 'p end
+class ['p, 'ts] tick_with_direction_ts :
+  ts:'ts ->
   p:'p ->
   v:'p ->
-  d:[ `Ask | `Bid | `Unset ] ->
+  d:d -> object method d : d method p : 'p method ts : 'ts method v : 'p end
+class ['p, 'ts] tick_with_d_ts_ns :
   ts:'ts ->
   ns:'ts ->
+  p:'p ->
+  v:'p ->
+  d:d ->
   object
-    method d : [ `Ask | `Bid | `Unset ]
+    method d : d
     method ns : 'ts
     method p : 'p
     method ts : 'ts
     method v : 'p
   end
+val show_tick_with_d_ts_ns :
+  < ns : int64; p : int64; ts : int64; v : int64; .. > -> string
+val pp_tick_with_d_ts_ns :
+  Format.formatter ->
+  < ns : int64; p : int64; ts : int64; v : int64; .. > -> unit
+val tick_with_d_ts_ns_to_bytes :
+  Bytes.t ->
+  int ->
+  < d : [< `Ask | `Bid | `Unset ]; ns : int64; p : int64; ts : int64;
+    v : int64; .. > ->
+  unit
+val tick_with_d_ts_ns_of_bytes :
+  Bytes.t -> int -> (int64, int64) tick_with_d_ts_ns option
 class ['ts, 'p] ticker :
   last:'p ->
   bid:'p ->
