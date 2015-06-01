@@ -45,8 +45,16 @@ val tick_with_d_ts_ns_to_bytes :
   < d : [< `Ask | `Bid | `Unset ]; ns : int64; p : int64; ts : int64;
     v : int64; .. > ->
   unit
+val tick_with_d_ts_ns_to_bigstring :
+  CCBigstring.t ->
+  int ->
+  < d : [< `Ask | `Bid | `Unset ]; ns : int64; p : int64; ts : int64;
+    v : int64; .. > ->
+  unit
 val tick_with_d_ts_ns_of_bytes :
   Bytes.t -> int -> (int64, int64) tick_with_d_ts_ns option
+val tick_with_d_ts_ns_of_bigstring :
+  CCBigstring.t -> int -> (int64, int64) tick_with_d_ts_ns option
 class ['ts, 'p] ticker :
   last:'p ->
   bid:'p ->

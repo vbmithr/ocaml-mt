@@ -1,2 +1,5 @@
 true: debug, safe_string, bin_annot
-<lib/*.*>: package(ppx_deriving.std), package(ocplib-endian)
+
+<lib/*.*>: package(ppx_deriving.std), \
+           package(ocplib-endian), \
+           package(containers.bigarray)

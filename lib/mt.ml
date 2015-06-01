@@ -83,9 +83,33 @@ let tick_with_d_ts_ns_to_bytes b off o =
           ) in
   set_int64 b (off+24) v
 
+let tick_with_d_ts_ns_to_bigstring b off o =
+  let open EndianBigstring.LittleEndian in
+  set_int64 b off o#ts;
+  set_int64 b (off+8) o#ns;
+  set_int64 b (off+16) o#p;
+  let v =
+    Int64.(logor
+             (logand o#v (shift_left 1L 62 - 1L))
+             (shift_left (of_int (d_to_enum o#d)) 62)
+          ) in
+  set_int64 b (off+24) v
+
 let tick_with_d_ts_ns_of_bytes b off =
   let open EndianBytes.LittleEndian in
   if Bytes.length b <> 32 then None
+  else
+    let ts = get_int64 b off in
+    let ns = get_int64 b (off+8) in
+    let p = get_int64 b (off+16) in
+    let v = get_int64 b (off+24) in
+    let d = Int64.(shift_right v 62 |> to_int |> d_of_enum_exn) in
+    let v = Int64.(logand v (shift_left 1L 62 - 1L)) in
+    Some (new tick_with_d_ts_ns ts ns p v d)
+
+let tick_with_d_ts_ns_of_bigstring b off =
+  let open EndianBigstring.LittleEndian in
+  if CCBigstring.length b <> 32 then None
   else
     let ts = get_int64 b off in
     let ns = get_int64 b (off+8) in
