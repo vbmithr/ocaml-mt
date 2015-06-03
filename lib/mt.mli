@@ -39,6 +39,8 @@ val show_tick_with_d_ts_ns :
 val pp_tick_with_d_ts_ns :
   Format.formatter ->
   < ns : int64; p : int64; ts : int64; v : int64; .. > -> unit
+val int64_of_v_d : int64 -> [< `Ask | `Bid | `Unset ] -> int64
+val v_d_of_int64 : int64 -> int64 * [> `Ask | `Bid | `Unset ]
 val tick_with_d_ts_ns_to_bytes :
   Bytes.t ->
   int ->
@@ -46,7 +48,7 @@ val tick_with_d_ts_ns_to_bytes :
     v : int64; .. > ->
   unit
 val tick_with_d_ts_ns_to_bigstring :
-  CCBigstring.t ->
+  EndianBigstring.bigstring ->
   int ->
   < d : [< `Ask | `Bid | `Unset ]; ns : int64; p : int64; ts : int64;
     v : int64; .. > ->
