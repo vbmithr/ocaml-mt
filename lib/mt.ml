@@ -58,18 +58,12 @@ class ['p, 'ts] tick_with_d_ts_ns ~ts ~ns ~p ~v ~d =
   end
 
 let show_tick_with_d_ts_ns o =
-  d_of_enum @@ Int64.(shift_right o#v 63 |> to_int) |> function
-  | None -> assert false
-  | Some d ->
-    Format.sprintf "< ts = %Ld, ns = %Ld, p = %Ld, v = %Ld, d = %s >"
-      o#ts o#ns o#p o#v (show_d d)
+  Format.sprintf "< ts = %Ld, ns = %Ld, p = %Ld, v = %Ld, d = %s >"
+    o#ts o#ns o#p o#v (show_d o#d)
 
 let pp_tick_with_d_ts_ns fmt o =
-  d_of_enum @@ Int64.(shift_right o#v 63 |> to_int) |> function
-  | None -> assert false
-  | Some d ->
-    Format.fprintf fmt "< ts = %Ld, ns = %Ld, p = %Ld, v = %Ld, d = %a >"
-      o#ts o#ns o#p o#v pp_d d
+  Format.fprintf fmt "< ts = %Ld, ns = %Ld, p = %Ld, v = %Ld, d = %a >"
+      o#ts o#ns o#p o#v pp_d o#d
 
 let int64_of_v_d v d =
   let open Int64 in
@@ -79,7 +73,7 @@ let int64_of_v_d v d =
 
 let v_d_of_int64 i =
   let open Int64 in
-  let d = shift_right i 62 |> to_int |> d_of_enum_exn in
+  let d = shift_right_logical i 62 |> to_int |> d_of_enum_exn in
   let v = logand i (shift_left 1L 62 - 1L) in
   v, d
 
