@@ -84,21 +84,21 @@ let v_d_of_int64 i =
   v, d
 
 let tick_with_d_ts_ns_to_bytes b off o =
-  let open EndianBytes.LittleEndian in
+  let open EndianBytes.BigEndian in
   set_int64 b off o#ts;
   set_int64 b (off+8) o#ns;
   set_int64 b (off+16) o#p;
   set_int64 b (off+24) @@ int64_of_v_d o#v o#d
 
 let tick_with_d_ts_ns_to_bigstring b off o =
-  let open EndianBigstring.LittleEndian in
+  let open EndianBigstring.BigEndian in
   set_int64 b off o#ts;
   set_int64 b (off+8) o#ns;
   set_int64 b (off+16) o#p;
   set_int64 b (off+24) @@ int64_of_v_d o#v o#d
 
 let tick_with_d_ts_ns_of_bytes b off =
-  let open EndianBytes.LittleEndian in
+  let open EndianBytes.BigEndian in
   if Bytes.length b <> 32 then None
   else
     let ts = get_int64 b off in
@@ -109,7 +109,7 @@ let tick_with_d_ts_ns_of_bytes b off =
     Some (new tick_with_d_ts_ns ts ns p v d)
 
 let tick_with_d_ts_ns_of_bigstring b off =
-  let open EndianBigstring.LittleEndian in
+  let open EndianBigstring.BigEndian in
   if CCBigstring.length b <> 32 then None
   else
     let ts = get_int64 b off in
