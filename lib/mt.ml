@@ -104,13 +104,13 @@ module Tick = struct
 
   module TickIO (IO: IO) = struct
     open IO
-    let write_dtsns b off o =
+    let write_tdtsns b off o =
       set_int64 b off o#ts;
       set_int64 b (off+8) o#ns;
       set_int64 b (off+16) o#p;
       set_int64 b (off+24) @@ int64_of_v_d o#v o#d
 
-    let read_dtsns b off =
+    let read_tdtsns b off =
       let ts = get_int64 b off in
       let ns = get_int64 b (off+8) in
       let p = get_int64 b (off+16) in
@@ -118,12 +118,12 @@ module Tick = struct
       let v, d = v_d_of_int64 v in
       new tdtsns ts ns p v d
 
-    let write_dts b off o =
+    let write_tdts b off o =
       set_int64 b off o#ts;
       set_int64 b (off+8) o#p;
       set_int64 b (off+16) @@ int64_of_v_d o#v o#d
 
-    let read_dts b off =
+    let read_tdts b off =
       let ts = get_int64 b off in
       let p = get_int64 b (off+8) in
       let v = get_int64 b (off+16) in
