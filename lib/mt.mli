@@ -73,33 +73,7 @@ module Tick :
       unit
     val int64_of_v_d : int64 -> [< `Ask | `Bid | `Unset ] -> int64
     val v_d_of_int64 : int64 -> int64 * [> `Ask | `Bid | `Unset ]
-    module type IO =
-      sig
-        type t
-        val length : t -> int
-        val get_int64 : t -> int -> int64
-        val set_int64 : t -> int -> int64 -> unit
-      end
-    module TickIO :
-      functor (IO : IO) ->
-        sig
-          val write_dtsns :
-            IO.t ->
-            int ->
-            < d : [< `Ask | `Bid | `Unset ]; ns : int64; p : int64;
-              ts : int64; v : int64; .. > ->
-            unit
-          val read_dtsns : IO.t -> int -> (int64, int64) tdtsns
-          val write_dts :
-            IO.t ->
-            int ->
-            < d : [< `Ask | `Bid | `Unset ]; p : int64; ts : int64;
-              v : int64; .. > ->
-            unit
-          val read_dts : IO.t -> int -> (int64, int64) tdts
-        end
-
-    module TickBytes :
+    module Bytes :
       sig
         val write_dtsns :
           Bytes.t ->
@@ -116,7 +90,7 @@ module Tick :
           unit
         val read_dts : Bytes.t -> int -> (int64, int64) tdts
       end
-    module TickBigstring :
+    module Bigstring :
       sig
         val write_dtsns :
           CCBigstring.t ->

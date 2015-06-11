@@ -131,20 +131,20 @@ module Tick = struct
       new tdts ts p v d
   end
 
-  module Bytes = struct
+  module BytesIO = struct
     include Bytes
     let get_int64 = EndianBytes.BigEndian.get_int64
     let set_int64 = EndianBytes.BigEndian.set_int64
   end
 
-  module Bigstring = struct
+  module BigstringIO = struct
     include CCBigstring
     let get_int64 = EndianBigstring.BigEndian.get_int64
     let set_int64 = EndianBigstring.BigEndian.set_int64
   end
 
-  module TickBytes = TickIO(Bytes)
-  module TickBigstring = TickIO(Bigstring)
+  module Bytes = TickIO(BytesIO)
+  module Bigstring = TickIO(BigstringIO)
 end
 
 module Ticker = struct
