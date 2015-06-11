@@ -63,14 +63,14 @@ module Tick = struct
     end
 
   let show_tdts o =
-    let ts = Int64.(o#ts div 1_000_000_000L) in
-    let ns = Int64.(o#ts rem 1_000_000_000L) in
+    let ts = Int64.(div o#ts 1_000_000_000L) in
+    let ns = Int64.(rem o#ts 1_000_000_000L) in
     Format.sprintf "< ts = %Ld.%Ld, p = %Ld, v = %Ld, d = %s >"
       ts ns o#p o#v (Direction.show o#d)
 
   let pp_tdts fmt o =
-    let ts = Int64.(o#ts div 1_000_000_000L) in
-    let ns = Int64.(o#ts rem 1_000_000_000L) in
+    let ts = Int64.(div o#ts 1_000_000_000L) in
+    let ns = Int64.(rem o#ts 1_000_000_000L) in
     Format.fprintf fmt "< ts = %Ld.%Ld, p = %Ld, v = %Ld, d = %a >"
       ts ns o#p o#v Direction.pp o#d
 

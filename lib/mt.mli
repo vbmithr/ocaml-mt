@@ -54,14 +54,10 @@ module Tick :
         method v : 'p
       end
     val show_tdts :
-      < d : [< `Ask | `Bid | `Unset ]; p : int64;
-        ts : (int64 -> int64 -> int64) -> int64 -> int64; v : int64; .. > ->
-      string
+      < d : [< `Ask | `Bid | `Unset ]; p : int64; ts : int64;  v : int64; .. > -> string
     val pp_tdts :
       Format.formatter ->
-      < d : [< `Ask | `Bid | `Unset ]; p : int64;
-        ts : (int64 -> int64 -> int64) -> int64 -> int64; v : int64; .. > ->
-      unit
+      < d : [< `Ask | `Bid | `Unset ]; p : int64; ts : int64; v : int64; .. > -> unit
     val show_tdtsns :
       < d : [< `Ask | `Bid | `Unset ]; ns : int64; p : int64; ts : int64;
         v : int64; .. > ->
