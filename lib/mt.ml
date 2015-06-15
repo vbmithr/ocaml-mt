@@ -82,69 +82,6 @@ module Tick = struct
   let pp_tdtsns fmt o =
     Format.fprintf fmt "< ts = %Ld, ns = %Ld, p = %Ld, v = %Ld, d = %a >"
       o#ts o#ns o#p o#v Direction.pp o#d
-
-  let int64_of_v_d v d =
-    let open Int64 in
-    logor
-      (logand v (shift_left 1L 62 - 1L))
-      (shift_left (of_int (Direction.to_enum d)) 62)
-
-  let v_d_of_int64 i =
-    let open Int64 in
-    let d = shift_right_logical i 62 |> to_int |> Direction.of_enum_exn in
-    let v = logand i (shift_left 1L 62 - 1L) in
-    v, d
-
-  module type IO = sig
-    type t
-    val length : t -> int
-    val get_int64 : t -> int -> int64
-    val set_int64 : t -> int -> int64 -> unit
-  end
-
-  module TickIO (IO: IO) = struct
-    open IO
-    let write_tdtsns b off o =
-      set_int64 b off o#ts;
-      set_int64 b (off+8) o#ns;
-      set_int64 b (off+16) o#p;
-      set_int64 b (off+24) @@ int64_of_v_d o#v o#d
-
-    let read_tdtsns b off =
-      let ts = get_int64 b off in
-      let ns = get_int64 b (off+8) in
-      let p = get_int64 b (off+16) in
-      let v = get_int64 b (off+24) in
-      let v, d = v_d_of_int64 v in
-      new tdtsns ts ns p v d
-
-    let write_tdts b off o =
-      set_int64 b off o#ts;
-      set_int64 b (off+8) o#p;
-      set_int64 b (off+16) @@ int64_of_v_d o#v o#d
-
-    let read_tdts b off =
-      let ts = get_int64 b off in
-      let p = get_int64 b (off+8) in
-      let v = get_int64 b (off+16) in
-      let v, d = v_d_of_int64 v in
-      new tdts ts p v d
-  end
-
-  module BytesIO = struct
-    include Bytes
-    let get_int64 = EndianBytes.BigEndian.get_int64
-    let set_int64 = EndianBytes.BigEndian.set_int64
-  end
-
-  module BigstringIO = struct
-    include CCBigstring
-    let get_int64 = EndianBigstring.BigEndian.get_int64
-    let set_int64 = EndianBigstring.BigEndian.set_int64
-  end
-
-  module Bytes = TickIO(BytesIO)
-  module Bigstring = TickIO(BigstringIO)
 end
 
 module Ticker = struct

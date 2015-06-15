@@ -67,43 +67,8 @@ module Tick :
       < d : [< `Ask | `Bid | `Unset ]; ns : int64; p : int64; ts : int64;
         v : int64; .. > ->
       unit
-    val int64_of_v_d : int64 -> [< `Ask | `Bid | `Unset ] -> int64
-    val v_d_of_int64 : int64 -> int64 * [> `Ask | `Bid | `Unset ]
-    module Bytes :
-      sig
-        val write_tdtsns :
-          Bytes.t ->
-          int ->
-          < d : [< `Ask | `Bid | `Unset ]; ns : int64; p : int64; ts : 
-            int64; v : int64; .. > ->
-          unit
-        val read_tdtsns : Bytes.t -> int -> (int64, int64) tdtsns
-        val write_tdts :
-          Bytes.t ->
-          int ->
-          < d : [< `Ask | `Bid | `Unset ]; p : int64; ts : int64; v : 
-            int64; .. > ->
-          unit
-        val read_tdts : Bytes.t -> int -> (int64, int64) tdts
-      end
-    module Bigstring :
-      sig
-        val write_tdtsns :
-          CCBigstring.t ->
-          int ->
-          < d : [< `Ask | `Bid | `Unset ]; ns : int64; p : int64; ts : 
-            int64; v : int64; .. > ->
-          unit
-        val read_tdtsns : CCBigstring.t -> int -> (int64, int64) tdtsns
-        val write_tdts :
-          CCBigstring.t ->
-          int ->
-          < d : [< `Ask | `Bid | `Unset ]; p : int64; ts : int64; v : 
-            int64; .. > ->
-          unit
-        val read_tdts : CCBigstring.t -> int -> (int64, int64) tdts
-      end
   end
+
 module Ticker :
   sig
     class ['ts, 'p] t :
