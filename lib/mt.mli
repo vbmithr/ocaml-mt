@@ -7,14 +7,8 @@ module Timestamp :
 
 module Direction :
   sig
-    type t = [ `Ask | `Bid | `Unset ]
-    val pp : Format.formatter -> [< `Ask | `Bid | `Unset ] -> unit
-    val show : [< `Ask | `Bid | `Unset ] -> string
-    val min : int
-    val max : int
-    val to_enum : [< `Ask | `Bid | `Unset ] -> int
-    val of_enum : int -> [> `Ask | `Bid | `Unset ] option
-    val of_enum_exn : int -> [> `Ask | `Bid | `Unset ]
+    type t = [ `Ask | `Bid | `Unset ] [@@deriving show,enum]
+    val of_enum_exn : int -> t
     class d : t -> object method d : t end
   end
 
@@ -54,17 +48,17 @@ module Tick :
         method v : 'p
       end
     val show_tdts :
-      < d : [< `Ask | `Bid | `Unset ]; p : int64; ts : int64;  v : int64; .. > -> string
+      < d : Direction.t; p : int64; ts : int64;  v : int64; .. > -> string
     val pp_tdts :
       Format.formatter ->
-      < d : [< `Ask | `Bid | `Unset ]; p : int64; ts : int64; v : int64; .. > -> unit
+      < d : Direction.t; p : int64; ts : int64; v : int64; .. > -> unit
     val show_tdtsns :
-      < d : [< `Ask | `Bid | `Unset ]; ns : int64; p : int64; ts : int64;
+      < d : Direction.t; ns : int64; p : int64; ts : int64;
         v : int64; .. > ->
       string
     val pp_tdtsns :
       Format.formatter ->
-      < d : [< `Ask | `Bid | `Unset ]; ns : int64; p : int64; ts : int64;
+      < d : Direction.t; ns : int64; p : int64; ts : int64;
         v : int64; .. > ->
       unit
   end
@@ -110,9 +104,5 @@ module Ticker :
   end
 module OrderBook :
   sig
-    type 'a t = { bids : 'a list; asks : 'a list; }
-    val pp :
-      (Format.formatter -> 'a -> 'b) -> Format.formatter -> 'a t -> unit
-    val show : (Format.formatter -> 'a -> 'b) -> 'a t -> string
-    val create : ?bids:'a list -> ?asks:'a list -> unit -> 'a t
+    type 'a t = { bids : 'a list; asks : 'a list; } [@@deriving show,create]
   end
