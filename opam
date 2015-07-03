@@ -13,6 +13,4 @@ build: [
 depends: [
   "ocamlfind" {build}
   "ppx_deriving"
-  "ocplib-endian"
-  "containers"
 ]

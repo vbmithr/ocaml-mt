@@ -1,108 +1,109 @@
 module Timestamp :
   sig
     class ['ts] t : 'ts -> object method ts : 'ts end
-    class ['ts] tns :
-      'ts -> 'ts -> object method ns : 'ts method ts : 'ts end
+    val compare : < ts : 'a; .. > -> < ts : 'a; .. > -> int
   end
-
 module Direction :
   sig
-    type t = [ `Ask | `Bid | `Unset ] [@@deriving show,enum]
-    val of_enum_exn : int -> t
-    class d : t -> object method d : t end
+    type dir = [ `Ask | `Bid | `Unset ]
+    val pp_dir : Format.formatter -> dir -> unit
+    val show_dir : dir -> String.t
+    val min_dir : int
+    val max_dir : int
+    val dir_to_enum : [< `Ask | `Bid | `Unset ] -> int
+    val dir_of_enum : int -> [> `Ask | `Bid | `Unset ] option
+    val dir_of_enum_exn : int -> [> `Ask | `Bid | `Unset ]
+    class t : dir -> object method d : dir end
+    val compare : < d : 'a; .. > -> < d : 'a; .. > -> int
   end
-
 module Tick :
   sig
-    class ['p] t : p:'p -> v:'p -> object method p : 'p method v : 'p end
-    class ['p] td :
-      p:'p ->
-      v:'p ->
-      d:Direction.t ->
-      object method d : Direction.t method p : 'p method v : 'p end
-    class ['p, 'ts] tts :
-      ts:'ts ->
-      p:'p -> v:'p -> object method p : 'p method ts : 'ts method v : 'p end
-    class ['p, 'ts] tdts :
-      ts:'ts ->
-      p:'p ->
-      v:'p ->
-      d:Direction.t ->
-      object
-        method d : Direction.t
-        method p : 'p
-        method ts : 'ts
-        method v : 'p
+    module T :
+      sig
+        class ['p] t : p:'p -> v:'p -> object method p : 'p method v : 'p end
+        val compare : < p : 'a; .. > -> < p : 'a; .. > -> int
       end
-    class ['p, 'ts] tdtsns :
-      ts:'ts ->
-      ns:'ts ->
-      p:'p ->
-      v:'p ->
-      d:Direction.t ->
-      object
-        method d : Direction.t
-        method ns : 'ts
-        method p : 'p
-        method ts : 'ts
-        method v : 'p
+    module TD :
+      sig
+        class ['p] t :
+          p:'p ->
+          v:'p ->
+          d:Direction.dir ->
+          object method d : Direction.dir method p : 'p method v : 'p end
+        val compare : < p : 'a; .. > -> < p : 'a; .. > -> int
       end
-    val show_tdts :
-      < d : Direction.t; p : int64; ts : int64;  v : int64; .. > -> string
-    val pp_tdts :
-      Format.formatter ->
-      < d : Direction.t; p : int64; ts : int64; v : int64; .. > -> unit
-    val show_tdtsns :
-      < d : Direction.t; ns : int64; p : int64; ts : int64;
-        v : int64; .. > ->
-      string
-    val pp_tdtsns :
-      Format.formatter ->
-      < d : Direction.t; ns : int64; p : int64; ts : int64;
-        v : int64; .. > ->
-      unit
+    module TTS :
+      sig
+        class ['p, 'ts] t :
+          ts:'ts ->
+          p:'p ->
+          v:'p -> object method p : 'p method ts : 'ts method v : 'p end
+        val compare : < p : 'a; .. > -> < p : 'a; .. > -> int
+      end
+    module TDTS :
+      sig
+        class ['p, 'ts] t :
+          ts:'ts ->
+          p:'p ->
+          v:'p ->
+          d:Direction.dir ->
+          object
+            method d : Direction.dir
+            method p : 'p
+            method ts : 'ts
+            method v : 'p
+          end
+        val compare : < p : 'a; .. > -> < p : 'a; .. > -> int
+        val show :
+          < d : Direction.dir; p : int64; ts : int64; v : int64; .. > ->
+          string
+        val pp :
+          Format.formatter ->
+          < d : Direction.dir; p : int64; ts : int64; v : int64; .. > -> unit
+      end
   end
-
 module Ticker :
   sig
-    class ['ts, 'p] t :
-      last:'p ->
-      bid:'p ->
-      ask:'p ->
-      high:'p ->
-      low:'p ->
-      volume:'p ->
-      ts:'ts ->
-      object
-        method ask : 'p
-        method bid : 'p
-        method high : 'p
-        method last : 'p
-        method low : 'p
-        method timestamp : 'ts
-        method volume : 'p
+    module T :
+      sig
+        class ['ts, 'p] t :
+          last:'p ->
+          bid:'p ->
+          ask:'p ->
+          high:'p ->
+          low:'p ->
+          volume:'p ->
+          ts:'ts ->
+          object
+            method ask : 'p
+            method bid : 'p
+            method high : 'p
+            method last : 'p
+            method low : 'p
+            method timestamp : 'ts
+            method volume : 'p
+          end
       end
-    class ['ts, 'p] tvwap :
-      vwap:'p ->
-      last:'p ->
-      bid:'p ->
-      ask:'p ->
-      high:'p ->
-      low:'p ->
-      volume:'p ->
-      ts:'ts ->
-      object
-        method ask : 'p
-        method bid : 'p
-        method high : 'p
-        method last : 'p
-        method low : 'p
-        method timestamp : 'ts
-        method volume : 'p
-        method vwap : 'p
+    module Tvwap :
+      sig
+        class ['ts, 'p] t :
+          vwap:'p ->
+          last:'p ->
+          bid:'p ->
+          ask:'p ->
+          high:'p ->
+          low:'p ->
+          volume:'p ->
+          ts:'ts ->
+          object
+            method ask : 'p
+            method bid : 'p
+            method high : 'p
+            method last : 'p
+            method low : 'p
+            method timestamp : 'ts
+            method volume : 'p
+            method vwap : 'p
+          end
       end
-  end
-module OrderBook :
-  sig
-    type 'a t = { bids : 'a list; asks : 'a list; } [@@deriving show,create]
   end
