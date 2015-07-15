@@ -30,6 +30,8 @@ module Tick = struct
       end
 
     let compare t t' = compare t#p t'#p
+    let show o = Format.sprintf "< p = %Ld, v = %Ld >"  o#p o#v
+    let pp fmt o = Format.fprintf fmt "< p = %Ld, v = %Ld >" o#p o#v
   end
 
   module TD = struct

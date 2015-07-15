@@ -22,6 +22,8 @@ module Tick :
       sig
         class ['p] t : p:'p -> v:'p -> object method p : 'p method v : 'p end
         val compare : < p : 'a; .. > -> < p : 'a; .. > -> int
+        val show : < p : int64; v : int64; .. > -> string
+        val pp : Format.formatter -> < p : int64; v : int64; .. > -> unit
       end
     module TD :
       sig
