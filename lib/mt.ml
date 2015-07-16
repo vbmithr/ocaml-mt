@@ -64,16 +64,12 @@ module Tick = struct
 
     let compare t t' = compare t#p t'#p
     let show o =
-      let ts = Int64.(div o#ts 1_000_000_000L) in
-      let ns = Int64.(rem o#ts 1_000_000_000L) in
-      Format.sprintf "< ts = %Ld.%Ld, p = %Ld, v = %Ld, d = %s >"
-        ts ns o#p o#v (Direction.show_dir o#d)
+      Format.sprintf "< ts = %Ld, p = %Ld, v = %Ld, d = %s >"
+        o#ts o#p o#v (Direction.show_dir o#d)
 
     let pp fmt o =
-      let ts = Int64.(div o#ts 1_000_000_000L) in
-      let ns = Int64.(rem o#ts 1_000_000_000L) in
-      Format.fprintf fmt "< ts = %Ld.%Ld, p = %Ld, v = %Ld, d = %a >"
-        ts ns o#p o#v Direction.pp_dir o#d
+      Format.fprintf fmt "< ts = %Ld, p = %Ld, v = %Ld, d = %a >"
+        o#ts o#p o#v Direction.pp_dir o#d
   end
 end
 
