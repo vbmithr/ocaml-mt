@@ -1,3 +1,15 @@
+module Currency : sig
+  type t = [
+    | `XBT
+    | `LTC
+    | `EUR
+    | `USD
+  ] [@@deriving show, enum, eq, ord]
+
+  val of_string : string -> t option
+  val to_string : t -> string
+end
+
 module Timestamp :
   sig
     class ['ts] t : 'ts -> object method ts : 'ts end
@@ -109,3 +121,15 @@ module Ticker :
           end
       end
   end
+
+module Balance : sig
+  class ['a] t :
+    currency:Currency.t ->
+    amount:'a ->
+    available:'a ->
+    object
+      method currency : Currency.t
+      method amount : 'a
+      method available : 'a
+    end
+end

@@ -1,3 +1,25 @@
+module Currency = struct
+  type t = [
+    | `XBT
+    | `LTC
+    | `EUR
+    | `USD
+  ] [@@deriving show, enum, eq, ord]
+
+  let to_string = function
+    | `XBT -> "XBT"
+    | `LTC -> "LTC"
+    | `EUR -> "EUR"
+    | `USD -> "USD"
+
+  let of_string s = match String.lowercase s with
+    | "xbt" | "`xbt" | "btc" -> Some `XBT
+    | "ltc" | "`ltc" -> Some `LTC
+    | "eur" | "`eur" -> Some `EUR
+    | "usd" | "`usd" -> Some `USD
+    | _ -> None
+end
+
 module Timestamp = struct
   class ['ts] t ts =
     object
@@ -94,4 +116,13 @@ module Ticker = struct
         method vwap : 'p = vwap
       end
   end
+end
+
+module Balance = struct
+  class ['a] t ~currency ~amount ~available =
+    object
+      method currency : Currency.t = currency
+      method amount : 'a = amount
+      method available : 'a = available
+    end
 end
