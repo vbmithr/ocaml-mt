@@ -10,6 +10,57 @@ module Currency : sig
   val to_string : t -> string
 end
 
+module Symbol : sig
+  type t = [
+    | `XBTUSD
+    | `XBTEUR
+    | `LTCUSD
+    | `LTCEUR
+    | `LTCXBT
+    | `XBTLTC
+  ] [@@deriving show, enum, eq, ord]
+
+  val to_string : t -> string
+  val of_string : string -> t option
+  val descr : t -> string
+end
+
+module Order : sig
+  type order_type = [
+    | `Market
+    | `Limit
+    | `Stop
+    | `Stop_limit
+    | `Market_if_touched
+  ] [@@deriving show, enum, eq, ord]
+
+  type time_in_force = [
+    | `Day
+    | `Good_till_canceled
+    | `Good_till_date_time
+    | `Immediate_or_cancel
+    | `All_or_none
+    | `Fill_or_kill
+  ] [@@deriving show, enum, eq, ord]
+
+  class ['p, 'sym, 'ot, 'tif] t :
+    symbol:'sym ->
+    client_id:string -> order_type:'ot ->
+    direction:[`Buy | `Sell] ->
+    price:'p -> ?price2:'p -> amount:'p ->
+    time_in_force:'tif -> unit ->
+    object
+      method client_id: string
+      method symbol: 'sym
+      method order_type: 'ot
+      method direction: [`Buy | `Sell]
+      method price: 'p
+      method price2: 'p option
+      method amount: 'p
+      method time_in_force: 'tif
+    end
+end
+
 module Timestamp :
   sig
     class ['ts] t : 'ts -> object method ts : 'ts end

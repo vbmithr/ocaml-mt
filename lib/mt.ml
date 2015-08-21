@@ -20,6 +20,74 @@ module Currency = struct
     | _ -> None
 end
 
+module Symbol = struct
+  type t = [
+    | `XBTUSD
+    | `XBTEUR
+    | `LTCUSD
+    | `LTCEUR
+    | `LTCXBT
+    | `XBTLTC
+  ] [@@deriving show, enum, eq, ord]
+
+  let to_string = function
+    | `XBTUSD -> "XBTUSD"
+    | `XBTEUR -> "XBTEUR"
+    | `LTCUSD -> "LTCUSD"
+    | `LTCEUR -> "LTCEUR"
+    | `LTCXBT -> "LTCXBT"
+    | `XBTLTC -> "XBTLTC"
+
+  let of_string s = String.lowercase s |> function
+    | "xbtusd" | "`xbtusd" | "btcusd" -> Some `XBTUSD
+    | "ltcusd" | "`ltcusd" -> Some `LTCUSD
+    | "xbteur" | "`xbteur" | "btceur" -> Some `XBTEUR
+    | "ltceur" | "`ltceur" -> Some `LTCEUR
+    | "ltcxbt" | "`ltcxbt" | "ltcbtc" -> Some `LTCXBT
+    | "xbtltc" | "`xbtltc" | "btcltc" -> Some `XBTLTC
+    | _ -> None
+
+  let descr = function
+    | `XBTUSD -> "Bitcoin / US Dollar"
+    | `XBTEUR -> "Bitcoin / Euro"
+    | `LTCUSD -> "Litecoin / US Dollar"
+    | `LTCEUR -> "Litecoin / Euro"
+    | `LTCXBT -> "Litecoin / Bitcoin"
+    | `XBTLTC -> "Bitcoin / Litecoin"
+end
+
+module Order = struct
+  type order_type = [
+    | `Market
+    | `Limit
+    | `Stop
+    | `Stop_limit
+    | `Market_if_touched
+  ] [@@deriving show, enum, eq, ord]
+
+  type time_in_force = [
+    | `Day
+    | `Good_till_canceled
+    | `Good_till_date_time
+    | `Immediate_or_cancel
+    | `All_or_none
+    | `Fill_or_kill
+  ] [@@deriving show, enum, eq, ord]
+
+  class ['p, 'sym, 'ot, 'tif] t ~symbol ~client_id ~order_type ~direction
+      ~price ?price2 ~amount ~time_in_force () =
+    object
+      method client_id : string = client_id
+      method symbol : 'sym = symbol
+      method order_type : 'ot = order_type
+      method direction : [`Buy | `Sell] = direction
+      method price : 'p = price
+      method price2 : 'p option = price2
+      method amount : 'p = amount
+      method time_in_force : 'tif = time_in_force
+    end
+end
+
 module Timestamp = struct
   class ['ts] t ts =
     object
