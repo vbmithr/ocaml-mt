@@ -193,4 +193,13 @@ module Balance = struct
       method amount : 'a = amount
       method available : 'a = available
     end
+
+  let pp pp_a fmt t =
+    Format.fprintf fmt
+      "< currency=%a; amount=%a; available=%a >"
+      Currency.pp t#currency
+      pp_a t#amount
+      pp_a t#available
+
+  let show pp_a t = Format.asprintf "%a" (pp pp_a) t
 end
