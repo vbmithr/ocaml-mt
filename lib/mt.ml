@@ -132,6 +132,13 @@ module Tick = struct
       end
 
     let compare t t' = compare t#p t'#p
+    let show t =
+      Format.sprintf "< p = %Ld, v = %Ld, d = %s >"
+        t#p t#v (Direction.show_dir t#d)
+
+    let pp fmt t =
+      Format.fprintf fmt "< p = %Ld, v = %Ld, d = %a >"
+        t#p t#v Direction.pp_dir t#d
   end
 
   module TTS = struct
@@ -142,6 +149,15 @@ module Tick = struct
       end
 
     let compare t t' = compare t#p t'#p
+    let show t =
+      let ts = Int64.(div t#ts 1_000_000_000L) in
+      let ns = Int64.(rem t#ts 1_000_000_000L) in
+      Format.sprintf "< ts = %Ld.%Ld, p = %Ld, v = %Ld >" ts ns t#p t#v
+
+    let pp fmt t =
+      let ts = Int64.(div t#ts 1_000_000_000L) in
+      let ns = Int64.(rem t#ts 1_000_000_000L) in
+      Format.fprintf fmt "< ts = %Ld.%Ld, p = %Ld, v = %Ld >" ts ns t#p t#v
   end
 
   module TDTS = struct
@@ -153,13 +169,17 @@ module Tick = struct
       end
 
     let compare t t' = compare t#p t'#p
-    let show o =
-      Format.sprintf "< ts = %Ld, p = %Ld, v = %Ld, d = %s >"
-        o#ts o#p o#v (Direction.show_dir o#d)
+    let show t =
+      let ts = Int64.(div t#ts 1_000_000_000L) in
+      let ns = Int64.(rem t#ts 1_000_000_000L) in
+      Format.sprintf "< ts = %Ld.%Ld, p = %Ld, v = %Ld, d = %s >"
+        ts ns t#p t#v (Direction.show_dir t#d)
 
-    let pp fmt o =
-      Format.fprintf fmt "< ts = %Ld, p = %Ld, v = %Ld, d = %a >"
-        o#ts o#p o#v Direction.pp_dir o#d
+    let pp fmt t =
+      let ts = Int64.(div t#ts 1_000_000_000L) in
+      let ns = Int64.(rem t#ts 1_000_000_000L) in
+      Format.fprintf fmt "< ts = %Ld.%Ld, p = %Ld, v = %Ld, d = %a >"
+        ts ns t#p t#v Direction.pp_dir t#d
   end
 end
 

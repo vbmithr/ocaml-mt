@@ -96,6 +96,10 @@ module Tick :
           d:Direction.dir ->
           object method d : Direction.dir method p : 'p method v : 'p end
         val compare : < p : 'a; .. > -> < p : 'a; .. > -> int
+        val show : < d : Direction.dir; p : int64; v : int64; .. > -> string
+        val pp :
+          Format.formatter ->
+          < d : Direction.dir; p : int64; v : int64; .. > -> unit
       end
     module TTS :
       sig
@@ -104,6 +108,10 @@ module Tick :
           p:'p ->
           v:'p -> object method p : 'p method ts : 'ts method v : 'p end
         val compare : < p : 'a; .. > -> < p : 'a; .. > -> int
+        val show : < p : int64; ts : int64; v : int64; .. > -> string
+        val pp :
+          Format.formatter ->
+          < p : int64; ts : int64; v : int64; .. > -> unit
       end
     module TDTS :
       sig
