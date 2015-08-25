@@ -18,6 +18,10 @@ module Currency = struct
     | "eur" | "`eur" -> Some `EUR
     | "usd" | "`usd" -> Some `USD
     | _ -> None
+
+  let of_string_exn s = match of_string s with
+    | None -> invalid_arg "Currency.of_string_exn"
+    | Some c -> c
 end
 
 module Symbol = struct
@@ -47,6 +51,10 @@ module Symbol = struct
     | "xbtltc" | "`xbtltc" | "btcltc" -> Some `XBTLTC
     | _ -> None
 
+  let of_string_exn s = match of_string s with
+    | None -> invalid_arg "Symbol.of_string_exn"
+    | Some s -> s
+
   let descr = function
     | `XBTUSD -> "Bitcoin / US Dollar"
     | `XBTEUR -> "Bitcoin / Euro"
@@ -74,17 +82,69 @@ module Order = struct
     | `Fill_or_kill
   ] [@@deriving show, enum, eq, ord]
 
-  class ['p, 'sym, 'ot, 'tif] t ~symbol ~client_id ~order_type ~direction
+    type order_status =
+    [ `Unspecified
+    | `Sent
+    | `Pending_open
+    | `Pending_child
+    | `Open
+    | `Pending_cancel_replace
+    | `Pending_cancel
+    | `Filled
+    | `Cancelled
+    | `Rejected
+    ] [@@deriving show, enum, eq, ord]
+
+  type update_reason =
+    [ `Unset
+    | `Open_orders_request
+    | `New_order_accepted
+    | `Filled
+    | `Partial_fill
+    | `Cancelled
+    | `Cancel_replace_complete
+    | `New_order_reject
+    | `Order_cancel_reject
+    | `Order_cancel_replace_reject
+    ] [@@deriving show, enum, eq, ord]
+
+  class ['p, 'sym, 'ot, 'tif] t ~symbol ~client_id ~order_type ~side
       ~price ?price2 ~amount ~time_in_force () =
     object
       method client_id : string = client_id
       method symbol : 'sym = symbol
       method order_type : 'ot = order_type
-      method direction : [`Buy | `Sell] = direction
+      method side : [`Buy | `Sell] = side
       method price : 'p = price
       method price2 : 'p option = price2
       method amount : 'p = amount
       method time_in_force : 'tif = time_in_force
+    end
+
+  class ['p, 'sym, 'ex, 'ot, 'tif, 'ts] status
+      ?(client_order_id=0) ?(server_order_id=0) ?(exchange_order_id=0)
+      ~symbol ~exchange ~p1 ?p2
+      ~order_qty ~filled_qty ~remaining_qty ~avg_fill_price
+      ~side ~order_type ~time_in_force ~ts
+      ~status ~update_reason () =
+    object
+      method client_order_id : int = client_order_id
+      method server_order_id : int = server_order_id
+      method exchange_order_id : int = exchange_order_id
+      method symbol : 'sym = symbol
+      method exchange : 'ex = exchange
+      method p1 : 'p = p1
+      method p2 : 'p option = p2
+      method order_qty : 'p = order_qty
+      method filled_qty : 'p = filled_qty
+      method remaining_qty : 'p = remaining_qty
+      method avg_fill_price : 'p = avg_fill_price
+      method side : [`Buy | `Sell] = side
+      method order_type : 'ot = order_type
+      method time_if_force : 'tif = time_in_force
+      method ts : 'ts = ts
+      method status : order_status = status
+      method update_reason : update_reason = update_reason
     end
 end
 

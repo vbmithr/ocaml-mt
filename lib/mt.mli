@@ -7,6 +7,7 @@ module Currency : sig
   ] [@@deriving show, enum, eq, ord]
 
   val of_string : string -> t option
+  val of_string_exn : string -> t
   val to_string : t -> string
 end
 
@@ -20,8 +21,9 @@ module Symbol : sig
     | `XBTLTC
   ] [@@deriving show, enum, eq, ord]
 
-  val to_string : t -> string
   val of_string : string -> t option
+  val of_string_exn : string -> t
+  val to_string : t -> string
   val descr : t -> string
 end
 
@@ -43,21 +45,73 @@ module Order : sig
     | `Fill_or_kill
   ] [@@deriving show, enum, eq, ord]
 
+  type order_status =
+    [ `Unspecified
+    | `Sent
+    | `Pending_open
+    | `Pending_child
+    | `Open
+    | `Pending_cancel_replace
+    | `Pending_cancel
+    | `Filled
+    | `Cancelled
+    | `Rejected
+    ] [@@deriving show, enum, eq, ord]
+
+  type update_reason =
+    [ `Unset
+    | `Open_orders_request
+    | `New_order_accepted
+    | `Filled
+    | `Partial_fill
+    | `Cancelled
+    | `Cancel_replace_complete
+    | `New_order_reject
+    | `Order_cancel_reject
+    | `Order_cancel_replace_reject
+    ] [@@deriving show, enum, eq, ord]
+
   class ['p, 'sym, 'ot, 'tif] t :
     symbol:'sym ->
     client_id:string -> order_type:'ot ->
-    direction:[`Buy | `Sell] ->
+    side:[`Buy | `Sell] ->
     price:'p -> ?price2:'p -> amount:'p ->
     time_in_force:'tif -> unit ->
     object
       method client_id: string
       method symbol: 'sym
       method order_type: 'ot
-      method direction: [`Buy | `Sell]
+      method side: [`Buy | `Sell]
       method price: 'p
       method price2: 'p option
       method amount: 'p
       method time_in_force: 'tif
+    end
+
+  class ['p, 'sym, 'ex, 'ot, 'tif, 'ts] status :
+    ?client_order_id:int -> ?server_order_id:int -> ?exchange_order_id:int ->
+    symbol:'sym -> exchange:'ex -> p1:'p -> ?p2:'p ->
+    order_qty:'p -> filled_qty:'p -> remaining_qty:'p -> avg_fill_price:'p ->
+    side:[`Buy | `Sell] -> order_type:'ot -> time_in_force:'tif -> ts:'ts ->
+    status:order_status -> update_reason:update_reason -> unit ->
+    object
+      method client_order_id: int
+      method server_order_id: int
+      method exchange_order_id: int
+      method symbol : 'sym
+      method exchange : 'ex
+      method p1 : 'p
+      method p2 : 'p option
+      method order_qty : 'p
+      method filled_qty : 'p
+      method remaining_qty : 'p
+      method avg_fill_price : 'p
+      method side : [`Buy | `Sell]
+      method order_type : 'ot
+      method time_if_force : 'tif
+      method ts : 'ts
+      method status : order_status
+      method update_reason : update_reason
     end
 end
 
