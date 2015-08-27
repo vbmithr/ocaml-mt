@@ -87,32 +87,6 @@ module Order : sig
       method amount: 'p
       method time_in_force: 'tif
     end
-
-  class ['p, 'sym, 'ex, 'ot, 'tif, 'ts] status :
-    ?client_order_id:int -> ?server_order_id:int -> ?exchange_order_id:int ->
-    symbol:'sym -> exchange:'ex -> p1:'p -> ?p2:'p ->
-    order_qty:'p -> filled_qty:'p -> remaining_qty:'p -> avg_fill_price:'p ->
-    side:[`Buy | `Sell] -> order_type:'ot -> time_in_force:'tif -> ts:'ts ->
-    status:order_status -> update_reason:update_reason -> unit ->
-    object
-      method client_order_id: int
-      method server_order_id: int
-      method exchange_order_id: int
-      method symbol : 'sym
-      method exchange : 'ex
-      method p1 : 'p
-      method p2 : 'p option
-      method order_qty : 'p
-      method filled_qty : 'p
-      method remaining_qty : 'p
-      method avg_fill_price : 'p
-      method side : [`Buy | `Sell]
-      method order_type : 'ot
-      method time_if_force : 'tif
-      method ts : 'ts
-      method status : order_status
-      method update_reason : update_reason
-    end
 end
 
 module Timestamp :

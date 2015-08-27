@@ -120,32 +120,6 @@ module Order = struct
       method amount : 'p = amount
       method time_in_force : 'tif = time_in_force
     end
-
-  class ['p, 'sym, 'ex, 'ot, 'tif, 'ts] status
-      ?(client_order_id=0) ?(server_order_id=0) ?(exchange_order_id=0)
-      ~symbol ~exchange ~p1 ?p2
-      ~order_qty ~filled_qty ~remaining_qty ~avg_fill_price
-      ~side ~order_type ~time_in_force ~ts
-      ~status ~update_reason () =
-    object
-      method client_order_id : int = client_order_id
-      method server_order_id : int = server_order_id
-      method exchange_order_id : int = exchange_order_id
-      method symbol : 'sym = symbol
-      method exchange : 'ex = exchange
-      method p1 : 'p = p1
-      method p2 : 'p option = p2
-      method order_qty : 'p = order_qty
-      method filled_qty : 'p = filled_qty
-      method remaining_qty : 'p = remaining_qty
-      method avg_fill_price : 'p = avg_fill_price
-      method side : [`Buy | `Sell] = side
-      method order_type : 'ot = order_type
-      method time_if_force : 'tif = time_in_force
-      method ts : 'ts = ts
-      method status : order_status = status
-      method update_reason : update_reason = update_reason
-    end
 end
 
 module Timestamp = struct
